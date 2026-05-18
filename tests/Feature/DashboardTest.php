@@ -23,5 +23,16 @@ class DashboardTest extends TestCase
 
         $response = $this->get(route('dashboard'));
         $response->assertOk();
+        
+        $response->assertViewHas([
+            'totalArticles',
+            'totalCategories',
+            'totalUsers',
+            'articlesThisWeek',
+            'usersThisWeek',
+            'recentArticles',
+            'recentUsers',
+            'categoryBreakdown'
+        ]);
     }
 }

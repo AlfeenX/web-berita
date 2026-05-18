@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 
 Route::view('/', 'welcome')->name('home');
 Route::get('/beranda', function () {
@@ -14,7 +15,7 @@ Route::get('/tentang', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('admin', 'dashboard')->name('dashboard');
+    Route::get('admin', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware(['auth'])->group(function () {
