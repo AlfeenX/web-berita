@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::withCount('articles')->get();
         return view('admin.users.index', compact('users'));
     }
 
@@ -80,7 +81,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Cegah agar user yang sedang login tidak menghapus akunnya sendiri
-        if ($user->id === auth()->id()) {
+        if ($user->id === Auth::id()) {
             return redirect()->route('users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif login!');
         }
 

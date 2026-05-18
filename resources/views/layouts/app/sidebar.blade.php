@@ -16,19 +16,20 @@
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+                <flux:sidebar.group :heading="__('Tools')" class="grid">
+                    <flux:sidebar.item icon="user-group" :href="route('users.index')" :current="request()->routeIs('users.index')" wire:navigate>
+                        {{ __('Pengguna') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="document-text" :href="route('articles.index')" :current="request()->routeIs('articles.index')" wire:navigate>
+                        {{ __('Artikel') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="folder" :href="route('categories.index')" :current="request()->routeIs('categories.index')" wire:navigate>
+                        {{ __('Kategori') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />
-
-            <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:sidebar.item>
-            </flux:sidebar.nav>
 
             <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
         </flux:sidebar>

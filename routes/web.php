@@ -14,17 +14,11 @@ Route::get('/tentang', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::view('admin', 'dashboard')->name('dashboard');
 });
 
 Route::middleware(['auth'])->group(function () {
 
-    // Halaman Utama Dashboard
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
-    // CRUD Pengguna, Kategori & Berita
     Route::resource('/admin/users', UserController::class);
     Route::resource('/admin/categories', CategoryController::class);
     Route::resource('/admin/articles', ArticleController::class);
