@@ -19,6 +19,7 @@
                 {{ $articleCount }} Artikel
             </span>
         </div>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-1.5">{{ $user->profile?->phone ?? '' }}</p>
         
         <p class="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-4">
             {{ $user->profile?->bio ?? 'Penulis di PareDaily.' }}

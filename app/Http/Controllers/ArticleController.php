@@ -68,7 +68,7 @@ class ArticleController extends Controller
             $imagePath = $request->file('image')->store('articles', 'public');
         }
 
-        Article::create([
+        $article = Article::create([
             'user_id' => Auth::id(),
             'category_id' => $request->input('category_id'),
             'title' => $request->input('title'),
@@ -76,6 +76,10 @@ class ArticleController extends Controller
             'content' => $request->input('content'),
             'image' => $imagePath,
         ]);
+
+        if ($request->has('tag_id')) {
+            $article->tags()->sync($request->input('tag_id'));
+        }
 
         return redirect()->route('articles.index')->with('success', 'Berita berhasil ditambahkan!');
     }
@@ -121,14 +125,12 @@ class ArticleController extends Controller
             'image' => $imagePath,
         ]);
 
-        // Pisahkan tag_id sebelum update
-        $tagIds = $validated['tag_id'];
-        unset($validated['tag_id']);
-
-        $article->update($validated);
-
         // Sync ke pivot table
-        $article->tags()->sync($tagIds);
+        if (isset($validated['tag_id'])) {
+            $article->tags()->sync($validated['tag_id']);
+        } else {
+            $article->tags()->sync([]);
+        }
 
         return redirect()->route('articles.index')->with('success', 'Berita berhasil diperbarui!');
     }
