@@ -44,19 +44,30 @@
             <flux:spacer />
 
             <flux:dropdown position="top" align="end">
-                <flux:profile
-                    :initials="auth()->user()->initials()"
-                    icon-trailing="chevron-down"
-                />
+                @if(auth()->user()->profile?->avatar)
+                    <button class="flex items-center gap-2 cursor-pointer">
+                        <img src="{{ Storage::url(auth()->user()->profile->avatar) }}" alt="{{ auth()->user()->name }}" class="size-8 rounded-full object-cover ring-2 ring-zinc-200 dark:ring-zinc-700">
+                        <flux:icon.chevron-down class="size-4 text-zinc-400" />
+                    </button>
+                @else
+                    <flux:profile
+                        :initials="auth()->user()->initials()"
+                        icon-trailing="chevron-down"
+                    />
+                @endif
 
                 <flux:menu>
                     <flux:menu.radio.group>
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <flux:avatar
-                                    :name="auth()->user()->name"
-                                    :initials="auth()->user()->initials()"
-                                />
+                                @if(auth()->user()->profile?->avatar)
+                                    <img src="{{ Storage::url(auth()->user()->profile->avatar) }}" alt="{{ auth()->user()->name }}" class="size-8 rounded-full object-cover">
+                                @else
+                                    <flux:avatar
+                                        :name="auth()->user()->name"
+                                        :initials="auth()->user()->initials()"
+                                    />
+                                @endif
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
                                     <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>

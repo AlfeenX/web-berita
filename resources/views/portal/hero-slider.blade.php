@@ -1,34 +1,57 @@
 @props(['articles'])
 
 <div x-data="{ 
-        activeSlide: 0, 
+        activeSlide: 0,
+        total: {{ count($articles) }},
         timer: null,
+        isVisible: true,
+        progressKey: 0,
         startTimer() {
             this.stopTimer();
+            if (!this.isVisible) return;
             this.timer = setInterval(() => { 
-                this.activeSlide = this.activeSlide === {{ count($articles) - 1 }} ? 0 : this.activeSlide + 1;
+                this.activeSlide = (this.activeSlide + 1) % this.total;
+                this.progressKey++;
             }, 5000);
         },
         stopTimer() {
-            if (this.timer) clearInterval(this.timer);
+            if (this.timer) { clearInterval(this.timer); this.timer = null; }
         },
         next() {
-            this.activeSlide = this.activeSlide === {{ count($articles) - 1 }} ? 0 : this.activeSlide + 1;
+            this.activeSlide = (this.activeSlide + 1) % this.total;
+            this.progressKey++;
             this.startTimer();
         },
         prev() {
-            this.activeSlide = this.activeSlide === 0 ? {{ count($articles) - 1 }} : this.activeSlide - 1;
+            this.activeSlide = (this.activeSlide - 1 + this.total) % this.total;
+            this.progressKey++;
             this.startTimer();
         },
         goTo(index) {
             this.activeSlide = index;
+            this.progressKey++;
             this.startTimer();
         }
      }" 
-     x-init="startTimer()"
+     x-init="
+        // Use IntersectionObserver to pause/resume when scrolling
+        const observer = new IntersectionObserver(([entry]) => {
+            isVisible = entry.isIntersecting;
+            if (isVisible) {
+                progressKey++;
+                startTimer();
+            } else {
+                stopTimer();
+            }
+        }, { threshold: 0.3 });
+        observer.observe($el);
+
+        // Kick off initial timer + progress
+        $nextTick(() => { progressKey++; startTimer(); });
+     "
      class="relative w-full bg-zinc-950 overflow-hidden" 
      @mouseenter="stopTimer()" 
-     @mouseleave="startTimer()">
+     @mouseleave="startTimer(); progressKey++;">
 
     <div class="relative aspect-[16/9] lg:aspect-[21/9] w-full">
         @foreach($articles as $index => $article)
@@ -106,12 +129,22 @@
         </div>
     </div>
     
-    {{-- Indicators --}}
+    {{-- Progress Indicators --}}
     <div class="absolute bottom-0 left-0 right-0 h-1 flex">
         @foreach($articles as $index => $article)
             <div class="flex-1 h-full bg-white/20 cursor-pointer" @click="goTo({{ $index }})">
                 <div class="h-full bg-indigo-500"
-                     :class="activeSlide === {{ $index }} ? 'w-full transition-all duration-[5000ms] ease-linear' : 'w-0 transition-none'"></div>
+                     x-data="{ animate: false }"
+                     x-init="$watch('$store', () => {})"
+                     x-effect="
+                        animate = false;
+                        if (activeSlide === {{ $index }}) {
+                            $nextTick(() => { requestAnimationFrame(() => { animate = true; }); });
+                        }
+                     "
+                     :class="animate ? 'w-full' : 'w-0'"
+                     :style="animate ? 'transition: width 5000ms linear' : 'transition: none'"
+                ></div>
             </div>
         @endforeach
     </div>

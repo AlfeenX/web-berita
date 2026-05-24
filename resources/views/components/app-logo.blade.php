@@ -3,11 +3,9 @@
 ])
 
 @if($sidebar)
-    <flux:sidebar.brand name="Laravel Starter Kit" {{ $attributes }}>
-        <x-slot name="logo" class="flex aspect-square size-8 items-center justify-center rounded-md bg-accent-content text-accent-foreground">
-            <x-app-logo-icon class="size-5 fill-current text-white dark:text-black" />
-        </x-slot>
-    </flux:sidebar.brand>
+    <a {{ $attributes }} class="flex items-center gap-2">
+        <img src="{{ asset('images/logo-removed-bg.png') }}" alt="{{ config('app.name', 'PareDaily') }}" class="h-8 w-auto dark:brightness-110">
+    </a>
 @else
 <img src="{{ asset('images/logo-removed-bg.png') }}" alt="{{ config('app.name', 'Laravel') }}" {{ $attributes }} class="h-10">
 @endif
