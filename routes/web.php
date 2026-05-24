@@ -3,17 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ArticleDetailController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\TagController;
 
-Route::view('/', 'welcome')->name('home');
-Route::get('/beranda', function () {
-    return view('user.beranda');
-});
-Route::get('/tentang', function () {
-    return view('user.tentang');
-});
+Route::get('/', [HomepageController::class, 'index'])->name('home');
+Route::get('/berita/{slug}', [ArticleDetailController::class, 'show'])->name('articles.detail');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin', [DashboardController::class, 'index'])->name('dashboard');

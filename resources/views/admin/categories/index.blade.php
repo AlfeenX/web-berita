@@ -56,7 +56,7 @@
     <flux:card class="p-6 shadow-md border-zinc-200/80 dark:border-zinc-700/80 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md">
         <div class="mb-6">
             <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Daftar Kategori</h2>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400">Total: {{ $categories->count() }} kategori terdaftar</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Total: {{ $categories->total() }} kategori terdaftar</p>
         </div>
 
         @if ($categories->isEmpty())
@@ -79,7 +79,7 @@
                     @foreach ($categories as $index => $category)
                         <flux:table.row x-data="{ editing: false, name: '{{ addslashes($category->name) }}' }" class="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors duration-150">
                             <flux:table.cell class="font-medium text-zinc-500 dark:text-zinc-400">
-                                {{ $index + 1 }}
+                                {{ $categories->firstItem() + $index }}
                             </flux:table.cell>
 
                             <flux:table.cell>
@@ -178,6 +178,9 @@
                     @endforeach
                 </flux:table.rows>
             </flux:table>
+            <div class="mt-6">
+                {{ $categories->links() }}
+            </div>
         @endif
     </flux:card>
 </x-layouts::app>

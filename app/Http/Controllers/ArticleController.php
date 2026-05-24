@@ -30,7 +30,7 @@ class ArticleController extends Controller
             $query->where('category_id', $request->input('category'));
         }
 
-        $articles = $query->latest()->get();
+        $articles = $query->latest()->paginate(10)->withQueryString();
         $categories = Category::all();
 
         return view('admin.articles.index', compact('articles', 'categories'));
@@ -70,10 +70,10 @@ class ArticleController extends Controller
 
         Article::create([
             'user_id' => Auth::id(),
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . time(),
-            'content' => $request->content,
+            'category_id' => $request->input('category_id'),
+            'title' => $request->input('title'),
+            'slug' => Str::slug($request->input('title')) . '-' . time(),
+            'content' => $request->input('content'),
             'image' => $imagePath,
         ]);
 
@@ -114,10 +114,10 @@ class ArticleController extends Controller
         }
 
         $article->update([
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . $article->id,
-            'content' => $request->content,
+            'category_id' => $request->input('category_id'),
+            'title' => $request->input('title'),
+            'slug' => Str::slug($request->input('title')) . '-' . $article->id,
+            'content' => $request->input('content'),
             'image' => $imagePath,
         ]);
 

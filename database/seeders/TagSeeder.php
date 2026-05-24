@@ -15,26 +15,14 @@ class TagSeeder extends Seeder
     public function run(): void
     {
          $tags = [
-            'Politik',
-            'Teknologi',
-            'Olahraga',
-            'Ekonomi',
-            'Bisnis',
-            'Internasional',
-            'Nasional',
-            'Kesehatan',
-            'Pendidikan',
-            'Hiburan',
-            'Otomotif',
-            'Lifestyle',
-            'Travel',
-            'Kuliner',
-            'Sains',
-            'Startup',
-            'AI',
-            'Gaming',
-            'Film',
-            'Musik',
+            'Pemilu', 'Kebijakan', 'Investasi', 'Saham', 
+            'Sepakbola', 'Badminton', 'Gadget', 'Internet',
+            'Film', 'Musik', 'K-Pop', 'Selebriti',
+            'Kuliner', 'Fashion', 'Traveling',
+            'Pendidikan', 'Lingkungan', 'Cuaca',
+            'Otomotif', 'Motor', 'Mobil',
+            'Tips & Trik', 'Review', 'Opini',
+            'Politik', 'Ekonomi', 'Startup'
         ];
 
         foreach ($tags as $tag) {
