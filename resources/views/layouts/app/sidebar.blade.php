@@ -26,6 +26,9 @@
                     <flux:sidebar.item icon="folder" :href="route('categories.index')" :current="request()->routeIs('categories.index')" wire:navigate>
                         {{ __('Kategori') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="tag" :href="route('tags.index')" :current="request()->routeIs('tags.index')" wire:navigate>
+                        {{ __('Tags') }}
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

@@ -111,7 +111,7 @@
 
                                 <flux:table.cell>
                                     @if ($article->image)
-                                        <img src="{{ Storage::url($article->image) }}" class="size-12 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm" alt="Thumbnail">
+                                        <img src="{{ asset('storage/' . $article->image) }}" class="size-12 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-sm" alt="Thumbnail">
                                     @else
                                         <div class="size-12 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm">
                                             <flux:icon.photo class="size-6 text-zinc-400 dark:text-zinc-500" />

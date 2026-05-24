@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class ArticleController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+                    ->orWhere('content', 'like', "%{$search}%");
             });
         }
 
@@ -41,7 +42,8 @@ class ArticleController extends Controller
         if ($categories->isEmpty()) {
             return redirect()->route('categories.index')->with('error', 'Silakan buat kategori terlebih dahulu sebelum menulis berita.');
         }
-        return view('admin.articles.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.articles.create', compact('categories', 'tags'));
     }
 
     public function store(Request $request)
@@ -49,6 +51,7 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|min:10|max:255',
             'category_id' => 'required|exists:categories,id',
+            'tag_id' => 'nullable | exists:tags,id',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ], [
@@ -80,16 +83,18 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         $categories = Category::all();
-        return view('admin.articles.edit', compact('article', 'categories'));
+        $tags = Tag::all();
+        return view('admin.articles.edit', compact('article', 'categories', 'tags'));
     }
 
     public function update(Request $request, Article $article)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'tag_id' => 'nullable | exists:tags,id'
         ], [
             'title.required' => 'Judul artikel wajib diisi.',
             'category_id.required' => 'Kategori artikel wajib dipilih.',
@@ -115,6 +120,15 @@ class ArticleController extends Controller
             'content' => $request->content,
             'image' => $imagePath,
         ]);
+
+        // Pisahkan tag_id sebelum update
+        $tagIds = $validated['tag_id'];
+        unset($validated['tag_id']);
+
+        $article->update($validated);
+
+        // Sync ke pivot table
+        $article->tags()->sync($tagIds);
 
         return redirect()->route('articles.index')->with('success', 'Berita berhasil diperbarui!');
     }
